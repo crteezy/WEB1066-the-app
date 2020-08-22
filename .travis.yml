@@ -45,7 +45,7 @@ jobs:
       script:
         - COVERAGE=$COVERAGE ./gradlew -p ./monolithic/repository/order check
       env:
-        - COVERAGE=0.5
+        - COVERAGE=0.25
 
     - stage: check
       name: "test-codecov"
@@ -69,7 +69,7 @@ jobs:
       script:
         - COVERAGE=$COVERAGE ./gradlew -p ./monolithic/repository/user check
       env:
-        - COVERAGE=0.5
+        - COVERAGE=0.25
 
 deploy:
   - provider: script
