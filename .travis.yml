@@ -16,6 +16,11 @@ jobs:
     install: skip
     script:
     - COVERAGE=$COVERAGE ./gradlew -p ./monolithic/ui check
+    deploy:
+    - provider: script
+      script: bash script/deploy.sh
+      on:
+        branch: master
     env:
     - COVERAGE=0.5
   - stage: test-jdk-8
@@ -122,11 +127,8 @@ jobs:
     - COVERAGE=$COVERAGE ./gradlew -p ./monolithic/repository/user check
     env:
     - COVERAGE=0.25
-deploy:
-- provider: script
-  script: bash -c  "echo \"${DOCKER_PASSWORD}\" | docker login --username chamithra --password-stdin"
-  on:
-    all_branches: true
+after_success:
+- find . -name jacocoTestReport.csv|xargs cat|awk -F',' '{print $3" "$4" "$5}'
 env:
   global:
     secure: sbsiLYp9AqejHff+1CSiOareGvH5xJXoI2cJQ9pqc3dH1tM9pKBWvBzv6P5rmzhcxqLpoagWE+7PIe6eDOpgSKrllGDqVam5Y5OihoZ+CjyofSE8WvDyHPec8o9MgNjddygZdPJR1kR/ZifjfPxC3tMZ8aa0LBpOZTPRFYYTzi+poGZOJLKhEHakpNWCCBgZgXUV86mvAkHQ6CY5lMyByxEL9Ocn/f+4QgvKaq4eXNNslldxUf7/O0xJAaLHP1oBeAGek2Ozs674a6Lho5oYsYKQgT81weqp6UnU+WkgxIlkcOyNu5OW+O7ArtNI9ncnxWB/1thqEWFukyv7AwwqNB9fYlFleLxgJRdxkE+dL4eP7AZTqx6xXR1SKesReOyTnEXvc8QEaxys6blwwht6kLrAFGZzrJ4um76ZIWhxHGyxnT/pFDVQI3Ws7oHCQiK2LvAch1kXu7QFQznH2sfz72GAYhc+t/Y0AoNvLdK2kNaBnJMUqnEpZX6ru0ocFC+w5bhTk7B/Iq5mGITuuGSC8bF/lpz2BHUdi0SjS/PY6HYqMpVFigdMpc77cyArShFfyTFGdJyJMtLzYhAsPUrZhgIncvRZqrlUKUtvh6ExKg5FpW/NqZbQ/X5Q/SJ5XWty4dOx0dWzgZfE6YqDTL5a4/oxm99CPTEBrw2T2Kv/rSA=
